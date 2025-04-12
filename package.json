@@ -20,15 +20,14 @@
   "description": "A desktop application for OnePortal",
   "devDependencies": {
     "electron": "^35.1.5",
-    "electron-builder": "^26.0.12",
-    "electron-packager": "^17.1.2"
+    "electron-builder": "^26.0.12"
   },
   "build": {
     "appId": "com.oneportaldesktop",
     "productName": "OnePortal Desktop",
     "icon": "build/icon",
     "mac": {
-      "target": "dmg",
+      "target": ["dmg", "zip"],
       "icon": "build/icon.icns"
     },
     "win": {
