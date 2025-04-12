@@ -1,0 +1,48 @@
+{
+  "name": "oneportal-desktop",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "desktop",
+    "electron",
+    "oneportal"
+  ],
+  "author": {
+    "name": "Sush",
+    "email": "mukesh.murugaiyan@thidiff.com"
+  },
+  "homepage": "http://portal.thidiff.com/",
+  "license": "ISC",
+  "description": "A desktop application for OnePortal",
+  "devDependencies": {
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.oneportaldesktop",
+    "productName": "OnePortal Desktop",
+    "icon": "build/icon",
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ],
+      "icon": "build/icon.png",
+      "maintainer": "Mukesh Murugaiyan <mukesh.murugaiyan@thidiff.com>",
+      "category": "Utility"
+    }
+  }
+}
