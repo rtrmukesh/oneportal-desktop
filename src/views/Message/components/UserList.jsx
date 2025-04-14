@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import MessagesService from "../../../services/MessagesService";
 import ArrayList from "../../../lib/ArrayList";
 import AvatarCard from "../../../components/UserCard";
+import { useAppContext } from "../../../context/AppContext";
 
-const UserList = () => {
-  const users = ["John", "Jane", "Paul"];
+const UserList = (props) => {
+  const { setSelectedUser, setSelectedChannel, getDirectMessage } = useAppContext();
   const [messageUserList, setMessageUserList] = useState([]);
 
   useEffect(() => {
@@ -26,7 +27,15 @@ const UserList = () => {
       <ul>
         {ArrayList.isArray(messageUserList) &&
           messageUserList.map((user) => (
-            <li className="row" key={user?.id} onClick={()=> {console.log('>>>------------------------> ', );}}>
+            <li
+              className="row"
+              key={user?.id}
+              onClick={() => {
+                setSelectedChannel && setSelectedChannel(null)
+                setSelectedUser && setSelectedUser(user);
+                getDirectMessage && getDirectMessage(user?.id)
+              }}
+            >
               <AvatarCard
                 first_name={user?.first_name}
                 last_name={user?.last_name}

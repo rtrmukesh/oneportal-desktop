@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ChannelList from './ChannelList';
 import UserList from './UserList';
 
-const Sidebar = ({ setSelectedChannel }) => {
+const Sidebar = ({  }) => {
   const [isChannelOpen, setIsChannelOpen] = useState(true);
   const [isUserOpen, setIsUserOpen] = useState(true);
 
@@ -18,7 +18,7 @@ const Sidebar = ({ setSelectedChannel }) => {
         </div>
         {isChannelOpen && (
           <div className="section-content">
-            <ChannelList setSelectedChannel={setSelectedChannel} />
+            <ChannelList  />
           </div>
         )}
       </div>
