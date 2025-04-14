@@ -98,9 +98,9 @@ body {
 /* ✴---sideBard---✴ */
 
 .slack-sidebar {
-  width: 250px;
+  width: 350px;
   height: 100vh;
-  background-color: #1d1c1d;
+  background-color: #350d36;
   color: #ddd;
   display: flex;
   flex-direction: column;
@@ -172,7 +172,7 @@ body {
 }
 
 .side-list h3 {
-  font-size: 18px;
+  font-size: 13px;
   margin-bottom: 10px;
 }
 
@@ -183,7 +183,7 @@ body {
 
 .side-list li {
   cursor: pointer;
-  padding: 8px;
+  padding: 5px;
   border-radius: 4px;
 }
 
@@ -191,11 +191,36 @@ body {
   background-color: #e0e0e0;
 }
 
+
+.slack-sidebar::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.slack-sidebar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+/* Show styled scrollbar on hover */
+.slack-sidebar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.slack-sidebar:hover::-webkit-scrollbar {
+  background-color: white;
+}
+
+
+
+
 /* Chat Window Styles */
 .chat-window {
-  flex: 1;
-  padding: 20px;
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f9f9f9;
+  width: 100vw;
 }
 
 .chat-window h2 {
@@ -203,15 +228,22 @@ body {
   margin-bottom: 20px;
 }
 
-.messages {
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-  margin-bottom: 20px;
-}
+
 
 .message {
-  margin-bottom: 10px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: #fff;
+  border-radius: 4px;
 }
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
 
 .message strong {
   color: #007a5a;
@@ -219,7 +251,17 @@ body {
 
 .message-input input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
+  padding: 0.75rem;
   border-radius: 4px;
+  border: 1px solid #ccc;
 }
+
+.message-input {
+  position: sticky;
+  bottom: 0;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+

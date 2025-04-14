@@ -21,13 +21,13 @@ function LoginPage() {
   });
 
   // Handle Form submission
-  const handleLogin = async (values) => {
+  const handleLogin = async (values,{ setSubmitting }) => {
     const { username, password } = values;
     let data = {
         email: username,
         password: password,
     }
-    await LoginService.login(data,async (response) => {
+    await LoginService.login(data,async (error,response) => {
         if (response?.user) {
             const {
                 token,
@@ -45,6 +45,11 @@ function LoginPage() {
               await EStore.setItem(TIME_ZONE, time_zone);
               navigate('/message')
 
+        }
+
+        if(error){
+          setSubmitting(false)
+          alert(error);
         }
     })
    
