@@ -1,0 +1,225 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  font-family: "Segoe UI", "Poppins", sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 400px; /* Increased max-width */
+  padding: 30px; /* Added padding for more space around content */
+}
+
+.login-title {
+  font-size: 20px; /* Increased font size */
+  font-weight: 600;
+  margin-bottom: 10px; /* Increased margin */
+  color: #333;
+}
+
+.login-subtitle {
+  font-size: 16px; /* Increased font size */
+  color: #666;
+  margin-bottom: 10px; /* Increased margin */
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px; /* Increased max-width */
+}
+
+.input-field {
+  padding: 13px 8px; /* Increased padding */
+  border: none;
+  border-radius: 8px; /* Rounded borders for a smoother look */
+  background-color: #f1f1f1;
+  font-size: 16px; /* Increased font size */
+  margin-top: 10px;
+}
+
+.checkbox-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px; /* Increased margin */
+  font-size: 14px; /* Slightly increased font size */
+  color: #333;
+  margin-top: 11px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Increased gap between label and checkbox */
+  }
+
+  a {
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.login-button {
+  background-color: #009de0;
+  color: #ffffff;
+  padding: 14px; /* Increased padding */
+  border: none;
+  border-radius: 8px; /* Rounded borders for a smoother look */
+  font-size: 16px; /* Increased font size */
+  cursor: pointer;
+  font-weight: 500;
+
+  &:hover {
+    opacity: 0.95;
+  }
+}
+
+.error-message {
+  color: red; /* Red color for error messages */
+  font-size: 15px; /* Adjust font size */
+  margin-bottom: 5px; /* Space between the field and the error message */
+  text-align: left;
+}
+
+/* ✴---sideBard---✴ */
+
+.slack-sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #1d1c1d;
+  color: #ddd;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  overflow-y: auto;
+  border-right: 1px solid #333;
+}
+
+.sidebar-section {
+  padding: 0 15px;
+  // margin-bottom: 15px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  // padding: 6px 0;
+  font-weight: 500;
+  font-size: 15px;
+  color: #b0b0b0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #fff;
+  }
+
+  .toggle-icon {
+    margin-right: 6px;
+    font-size: 12px;
+  }
+
+  .section-title {
+    font-size: 14px;
+  }
+}
+
+.section-content {
+  font-size: 13px;
+  color: #e3e3e3;
+  text-align: left;
+}
+
+.row {
+  &:hover {
+    background-color: #ffffff;
+    color: #000000;
+  }
+}
+
+.side-list {
+  padding: 0 15px;
+}
+
+/* App Layout */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background-color: #f4f5f7;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.side-list h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.side-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.side-list li {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.side-list li:hover {
+  background-color: #e0e0e0;
+}
+
+/* Chat Window Styles */
+.chat-window {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+}
+
+.chat-window h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.messages {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.message strong {
+  color: #007a5a;
+}
+
+.message-input input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
