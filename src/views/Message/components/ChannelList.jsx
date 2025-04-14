@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import MessageChannelService from '../../../services/MessageChannelService';
 import ArrayList from '../../../lib/ArrayList';
+import { useAppContext } from '../../../context/AppContext';
 
-const ChannelList = ({ setSelectedChannel }) => {
+const ChannelList = ({ }) => {
+  const { setSelectedChannel, setSelectedUser } = useAppContext();
+
   const [channelList, setChannelList] = React.useState([]);
   useEffect(() => {
     getChannelList();
@@ -22,7 +25,10 @@ const ChannelList = ({ setSelectedChannel }) => {
     <div className="side-list">
       <ul>
         {ArrayList.isArray(channelList) && channelList.map((channel) => (
-          <li className='row' key={channel} onClick={() => setSelectedChannel(channel)}>
+          <li className='row' key={channel} onClick={() => {
+            setSelectedUser && setSelectedUser(null)
+            setSelectedChannel && setSelectedChannel(channel)
+          }}>
             {channel?.channel_name}
           </li>
         ))}

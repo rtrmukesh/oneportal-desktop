@@ -14,7 +14,7 @@ const AvatarCard = ({
     width: size,
     height: size,
     borderRadius: '23%',
-    backgroundColor: '#007a5a',
+    backgroundColor: 'gray',
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
@@ -29,7 +29,6 @@ const AvatarCard = ({
   const nameStyle = {
     fontSize: 13,
     fontWeight: 500,
-    color: '#eaeaea', // Slack sidebar typically uses light gray
     lineHeight: 1.2,
     overflow: 'hidden',
     whiteSpace: 'nowrap',

@@ -1,6 +1,7 @@
 import ArrayList from "../lib/ArrayList"
 import Url from "../lib/Url"
 import { endpoints } from "../api/endPoints"
+import { apiClient } from "../apiClient";
 
 
 class MessagesService {
@@ -15,6 +16,19 @@ class MessagesService {
             throw err
         }
     }
+
+    static async getMessages(id) {
+        try {
+          if (id) {
+            let response = await apiClient.get(`${endpoints().messageAPI}/${id}`);
+            return response;
+          }
+        } catch (err) {
+          console.log(err);
+          return null;
+        }
+      }
+    
 
 }
 export default MessagesService
