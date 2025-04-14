@@ -7,7 +7,7 @@ const ChatWindow = ({ selectedChannel }) => {
 
   return (
     <div className="chat-window">
-      <h2>Chat for {selectedChannel}</h2>
+      <h2>Chat for {selectedChannel?.channel_name}</h2>
       {/* Display Messages for the Selected Channel */}
       <div className="messages">
         <div className="message">

@@ -11,7 +11,7 @@ class LoginService {
         let successMessage;
         if (response && response.data) {
           successMessage = response.data.message;
-            return callback && callback(response.data);
+            return callback && callback(null,response.data);
         }
       })
       .catch((error) => {
@@ -20,6 +20,7 @@ class LoginService {
           const errorRequest = error.response.request;
           if (errorRequest && errorRequest.response) {
             errorMessage = JSON.parse(errorRequest.response).message;
+            return callback && callback(errorMessage,null);
           }
         }
       });
