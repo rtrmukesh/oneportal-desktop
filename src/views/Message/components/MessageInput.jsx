@@ -1,19 +1,40 @@
 import React, { useRef, useState, useEffect } from "react";
+import MessagesService from "../../../services/MessagesService";
+import { useAppContext } from "../../../context/AppContext";
 
 const MessageInput = (props) => {
+    const { selectedUser, getDirectMessage } = useAppContext();
+  
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState("");
   const [rows, setRows] = useState(1); // Start with 1 row for default height
 
-  const { handleFileChange, handleSendMessage } = props;
+  const { handleFileChange } = props;
 
-  const handleSend = () => {
-    if (message.trim()) {
-        handleSendMessage && handleSendMessage(message);
-      setMessage(""); // Clear input after sending message
-      setRows(1); // Reset to initial rows after sending message
+
+
+  const handleSend =async ()=>{
+    if (message?.trim()) {
+    let msgData = new FormData()
+
+    msgData.append("message", message ? message : "");
+    msgData.append("reciever_user_id", selectedUser?.id);
+
+    let response = await MessagesService.Create(msgData);
+
+
+    if(response){
+      setMessage(""); 
+      setRows(1); 
+      if(selectedUser){
+        getDirectMessage && getDirectMessage()
+      }
     }
-  };
+  }
+  }
+
+
+
 
   // Adjust rows dynamically based on content length
   useEffect(() => {
@@ -82,6 +103,7 @@ const MessageInput = (props) => {
               ref={fileInputRef}
               onChange={handleFileChange}
               style={{ display: "none" }}
+               accept="image/*, video/*"
             />
           </div>
           <button

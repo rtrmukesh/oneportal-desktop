@@ -17,14 +17,14 @@ function createWindow() {
       contextIsolation: true,
     },
   });
-
+  
   // For development, load the Vite app
   if (process.env.NODE_ENV === 'development') {
     win.loadURL(process.env.VITE_APP_URL); 
   } else {
-    // For production, load the built React app
-    win.loadFile(path.join(__dirname, 'dist', 'index.html'));
+    win.loadFile(path.join(__dirname, 'dist/index.html'));
   }
+  win.webContents.openDevTools();
 
   win.on('closed', () => {
     win = null;

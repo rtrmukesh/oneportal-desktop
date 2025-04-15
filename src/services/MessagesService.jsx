@@ -28,6 +28,20 @@ class MessagesService {
           return null;
         }
       }
+
+      static async Create(data) {
+        try {
+          if (data) {
+            let response = await apiClient.post(
+              `${endpoints().messageAPI}/create`,
+              data
+            );
+            return response;
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     
 
 }
