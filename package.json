@@ -1,16 +1,28 @@
 {
-  "name": "react-app",
+  "name": "oneportal-desktop",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "description": "A desktop application for OnePortal",
+  "main": "main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
     "electron": "electron main.cjs",
-    "start": "concurrently \"npm run dev\" \"npm run electron\""
+    "start": "concurrently \"npm run dev\" \"npm run electron\"",
+    "dist": "electron-builder"
   },
+  "keywords": [
+    "desktop",
+    "electron",
+    "oneportal"
+  ],
+  "author": {
+    "name": "Sush",
+    "email": "mukesh.murugaiyan@thidiff.com"
+  },
+  "homepage": "http://portal.thidiff.com/",
+  "license": "ISC",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -38,10 +50,30 @@
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^7.6.0",
     "electron": "^35.1.5",
+    "electron-builder": "^26.0.12",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "vite": "^6.2.0"
+  },
+  "build": {
+    "appId": "com.oneportaldesktop",
+    "productName": "OnePortal Desktop",
+    "icon": "build/icon",
+    "mac": {
+      "target": ["dmg", "zip"],
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": ["deb", "AppImage"],
+      "icon": "build/icon.png",
+      "maintainer": "Mukesh Murugaiyan <mukesh.murugaiyan@thidiff.com>",
+      "category": "Utility"
+    }
   }
 }
