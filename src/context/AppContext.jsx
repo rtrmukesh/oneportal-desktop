@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import MessagesService from '../services/MessagesService';
+import ChannelMessagesService from '../services/ChannelMessagesService';
 
 // Create the context
 const AppContext = createContext();
@@ -9,7 +10,8 @@ export const AppProvider = ({ children }) => {
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const [dirMessages, setDirMessages] = useState([])
+  const [dirMessages, setDirMessages] = useState([]);
+  const [channalMessageList, setChannalMessageList] = useState([])
 
 
   const getDirectMessage = async (inReceiverId=null) => {
@@ -40,8 +42,12 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  let getChennalMessage =()=>{
-
+  let getChannalMessage = async (channel) => {
+    let response = await ChannelMessagesService.search({
+      channel_id: channel && channel?.channel_id,
+    });
+    let data = response && response?.data;
+    setChannalMessageList(data)
   }
 
 
@@ -52,9 +58,11 @@ export const AppProvider = ({ children }) => {
         setSelectedChannel,
         selectedUser,
         setSelectedUser,
-        getChennalMessage,
+        getChannalMessage,
         getDirectMessage,
-        dirMessages
+        dirMessages,
+        setDirMessages,
+        channalMessageList
       }}
     >
       {children}

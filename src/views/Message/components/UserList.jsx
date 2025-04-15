@@ -5,7 +5,7 @@ import AvatarCard from "../../../components/UserCard";
 import { useAppContext } from "../../../context/AppContext";
 
 const UserList = (props) => {
-  const { setSelectedUser, setSelectedChannel, getDirectMessage } = useAppContext();
+  const { setSelectedUser, setSelectedChannel, getDirectMessage, setChannalMessageList } = useAppContext();
   const [messageUserList, setMessageUserList] = useState([]);
 
   useEffect(() => {
@@ -32,6 +32,7 @@ const UserList = (props) => {
               key={user?.id}
               onClick={() => {
                 setSelectedChannel && setSelectedChannel(null)
+                setChannalMessageList && setChannalMessageList([])
                 setSelectedUser && setSelectedUser(user);
                 getDirectMessage && getDirectMessage(user?.id)
               }}

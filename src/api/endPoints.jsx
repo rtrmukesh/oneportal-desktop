@@ -7,4 +7,5 @@ export const endpoints = () => ({
   userAPI: appApi("user/v1"),
   MessageChannelApi: appApi("v1/messageChannel"),
   messageAPI: appApi("v1/message"),
+  channelMessageAPI: appApi("v1/channelMessage"),
 });

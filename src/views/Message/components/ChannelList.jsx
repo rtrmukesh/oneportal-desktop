@@ -4,7 +4,7 @@ import ArrayList from '../../../lib/ArrayList';
 import { useAppContext } from '../../../context/AppContext';
 
 const ChannelList = ({ }) => {
-  const { setSelectedChannel, setSelectedUser } = useAppContext();
+  const { setSelectedChannel, setSelectedUser, setDirMessages, getChannalMessage } = useAppContext();
 
   const [channelList, setChannelList] = React.useState([]);
   useEffect(() => {
@@ -26,8 +26,10 @@ const ChannelList = ({ }) => {
       <ul>
         {ArrayList.isArray(channelList) && channelList.map((channel) => (
           <li className='row' key={channel} onClick={() => {
+            setDirMessages && setDirMessages([])
             setSelectedUser && setSelectedUser(null)
             setSelectedChannel && setSelectedChannel(channel)
+            getChannalMessage && getChannalMessage(channel)
           }}>
             {channel?.channel_name}
           </li>
