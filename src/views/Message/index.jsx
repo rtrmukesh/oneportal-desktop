@@ -3,15 +3,14 @@ import ChatWindow from './components/ChatWindow';
 import Sidebar from './components/Sidebar';
 
 const Message = () => {
-  const [selectedChannel, setSelectedChannel] = useState(null);
 
   return (
     <div className="app">
       {/* Sidebar (Left) */}
-      <Sidebar setSelectedChannel={setSelectedChannel} />
+      <Sidebar />
 
       {/* Chat Window (Right) */}
-      <ChatWindow selectedChannel={selectedChannel} />
+      <ChatWindow/>
     </div>
   );
 };

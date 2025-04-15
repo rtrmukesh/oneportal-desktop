@@ -7,7 +7,7 @@ const AvatarCard = ({
   size = 40,
   showName = true,
 }) => {
-  const initials = `${first_name?.charAt(0)}${last_name?.charAt(0)}`.toUpperCase();
+  const initials = `${first_name ? first_name?.charAt(0):""}${last_name ? last_name?.charAt(0):""}`.toUpperCase();
   const fullName = `${first_name} ${last_name}`;
 
   const avatarStyle = {

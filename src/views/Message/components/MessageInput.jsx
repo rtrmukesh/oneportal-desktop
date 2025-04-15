@@ -4,7 +4,7 @@ import { useAppContext } from "../../../context/AppContext";
 import ArrayList from "../../../lib/ArrayList";
 
 const MessageInput = () => {
-  const { selectedUser, getDirectMessage } = useAppContext();
+  const { selectedUser, getDirectMessage, selectedChannel } = useAppContext();
 
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -15,7 +15,7 @@ const MessageInput = () => {
 
 
   const handleSend = async () => {
-    if (!message.trim() && selectedFiles.length === 0) return;
+    if (!message.trim() && selectedFiles.length === 0 || selectedChannel) return;
     setIsLoading(true)
     let msgData = new FormData();
     msgData.append("message", message.trim());
@@ -161,7 +161,7 @@ const MessageInput = () => {
           </div>
           <button
             onClick={handleSend}
-            disabled={!message.trim() && selectedFiles.length === 0 || isLoading}
+            disabled={!message.trim() && selectedFiles.length === 0 || isLoading || selectedChannel}
             style={{
               fontSize: "18px",
               padding: "6px 12px",

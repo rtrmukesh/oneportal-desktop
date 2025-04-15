@@ -18,12 +18,9 @@ const MediaViewer = ({ media_url }) => {
   const [openMedia, setOpenMedia] = useState(null);
 
   const mediaList = ArrayList.isArray(media_url) ? media_url : media_url ? media_url.split(",") : [];
-
   return (
     <div className="media-gallery d-flex gap-3 flex-wrap">
       {mediaList.map((url, index) => {
-        const imgRef = useRef(null);
-        const isVisible = useIntersectionObserver(imgRef, true); // you can disable for modal too
 
         return (
           <div key={index} className="media-item">
@@ -36,8 +33,7 @@ const MediaViewer = ({ media_url }) => {
               />
             ) : (
               <img
-                ref={imgRef}
-                src={isVisible ? url : ''}
+                src={url}
                 alt="media"
                 className="message-image"
                 onClick={() => setOpenMedia({ type: 'image', url })}

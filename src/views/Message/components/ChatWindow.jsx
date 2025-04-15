@@ -5,7 +5,7 @@ import ChatList from "./ChatList";
 import MessageInput from "./MessageInput";
 
 const ChatWindow = () => {
-  const { selectedUser, selectedChannel, dirMessages } = useAppContext();
+  const { selectedUser, selectedChannel } = useAppContext();
 
 
 
@@ -27,7 +27,7 @@ const ChatWindow = () => {
   return (
     <div className="chat-window">
       <ChatHeader channelName={selectedChannel?.channel_name} userName={selectedUser} />
-      <ChatList dirMessages={dirMessages} />
+      <ChatList />
       <MessageInput handleFileChange={handleFileChange}  />
     </div>
   );

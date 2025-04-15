@@ -239,11 +239,15 @@ body {
 /* Shared message styles */
 .message {
   position: relative;
-  max-width: 80%;
-  margin-bottom: 0.5rem;
   padding: 0.75rem;
   border-radius: 6px;
   background: #fff;
+}
+
+.sample {
+  position: relative;
+  max-width: 80%;
+  border-radius: 6px;
   word-break: break-word;
   overflow-wrap: break-word;
 }
@@ -258,7 +262,6 @@ body {
 /* Receiver (others) */
 .other-message {
   align-self: flex-start;
-  background-color: #ffffff;
   text-align: left;
 }
 
