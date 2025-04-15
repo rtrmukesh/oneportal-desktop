@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useEffect } from 'react';
-import { Route, HashRouter as Router, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, HashRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import './custom.scss';
@@ -27,7 +27,7 @@ const AppRoutes = () => {
   }, [navigate]);
 
   const routes = [
-    { path: '/', element: <LoginPage /> },
+    { path: '/', element: <Navigate to="/login" /> },
     { path: '/login', element: <LoginPage /> },
     { path: '/message', element: <Message /> },
   ];
