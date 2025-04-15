@@ -1,82 +1,78 @@
-import { Modal } from 'reactstrap';
 import React, { useState } from 'react';
+import { Modal } from 'reactstrap';
 import { MdClose } from 'react-icons/md';
-import ReactPlayer from 'react-player'; // For video playback
-import Lightbox from 'yet-another-react-lightbox';
 import { FaYoutube } from 'react-icons/fa';
+import ReactPlayer from 'react-player';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
+import ArrayList from '../lib/ArrayList';
 
 export const isVideoURL = (url) => {
-    const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv'];
-    const fileExtension = url && url.slice(url.lastIndexOf('.')).toLowerCase();
-    return videoExtensions.includes(fileExtension);
-  };
-  
+  const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv'];
+  const fileExtension = url && url.slice(url.lastIndexOf('.')).toLowerCase();
+  return videoExtensions.includes(fileExtension);
+};
 
 const MediaViewer = ({ media_url }) => {
-    const [openMedia, setOpenMedia] = useState(null);
+  const [openMedia, setOpenMedia] = useState(null);
 
-   
-    return (
-        <div>
-            {media_url && (
-                <div className="message-media">
-                {/* Check if the media is a video */}
-                {isVideoURL(media_url) ? (
-                  <FaYoutube size={90} color="black" onClick={() => setOpenMedia(media_url)} />
-                ) : (
-                  <img
-                    src={media_url}
-                    alt="media"
-                    className="message-image"
-                    onClick={() => setOpenMedia(media_url)}
-                  />
-                )}
-              </div>
-            )}
+  const mediaList = ArrayList.isArray(media_url) ? media_url : media_url ? media_url.split(","):[];
 
-            {/* Show the lightbox for videos or images */}
-            {openMedia && (
-                <div className="lightbox-overlay">
-                    <div className="lightbox-content">
-                        {isVideoURL(media_url) ? (
-                            <Modal
-                                isOpen={true}
-                                onRequestClose={() => {
-                                    setOpenMedia(null);
-                                }}
-                                contentLabel="Video Modal"
-                            >
-                                <div className="modal-content p-0 message-media">
-                                    <div className="d-flex justify-content-end">
-                                        < MdClose
-                                            className="cursor-pointer align-right fw-bold h3 mt-0 pt-0"
-                                            onClick={() => {
-                                                setOpenMedia(null);
-                                            }}
-                                        />
-                                    </div>
-                                    <ReactPlayer
-                                        url={media_url}
-                                        playing={true}
-                                        controls={true}
-                                        width="100%"
-                                        height="100%"
-                                    />
-                                </div>
-                            </Modal>
-                        ) : (
-                            <Lightbox
-                                open={openMedia ? true : false}
-                                close={() => setOpenMedia(null)}
-                                slides={[{ src: media_url }]}
-                                renderPrevNext={null}
-                            />
-                        )}
-                    </div>
-                </div>
-            )}
+  return (
+    <div className="media-gallery d-flex gap-3 flex-wrap">
+      {mediaList.map((url, index) => (
+        <div key={index} className="media-item">
+          {isVideoURL(url) ? (
+            <FaYoutube
+              size={90}
+              color="black"
+              onClick={() => setOpenMedia({ type: 'video', url })}
+              style={{ cursor: 'pointer' }}
+            />
+          ) : (
+            <img
+              src={url}
+              alt="media"
+              className="message-image"
+              onClick={() => setOpenMedia({ type: 'image', url })}
+              style={{ width: 100, height: 100, objectFit: 'cover', cursor: 'pointer' }}
+            />
+          )}
         </div>
-    );
+      ))}
+
+      {openMedia?.type === 'video' && (
+        <Modal isOpen={true} toggle={() => setOpenMedia(null)}>
+          <div className="modal-content p-0 message-media">
+            <div className="d-flex justify-content-end">
+              <MdClose
+                className="cursor-pointer fw-bold h3"
+                onClick={() => setOpenMedia(null)}
+              />
+            </div>
+            <ReactPlayer
+              url={openMedia.url}
+              playing={true}
+              controls={true}
+              width="100%"
+              height="100%"
+            />
+          </div>
+        </Modal>
+      )}
+
+      {openMedia?.type === 'image' && (
+        <Lightbox
+          open={true}
+          close={() => setOpenMedia(null)}
+          slides={mediaList
+            .filter((url) => !isVideoURL(url))
+            .map((url) => ({ src: url }))}
+          index={mediaList.filter((url) => !isVideoURL(url)).findIndex((i) => i === openMedia.url)}
+        />
+      )}
+    </div>
+  );
 };
 
 export default MediaViewer;

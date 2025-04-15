@@ -1,55 +1,62 @@
 import React, { useRef, useState, useEffect } from "react";
 import MessagesService from "../../../services/MessagesService";
 import { useAppContext } from "../../../context/AppContext";
+import ArrayList from "../../../lib/ArrayList";
 
-const MessageInput = (props) => {
-    const { selectedUser, getDirectMessage } = useAppContext();
-  
+const MessageInput = () => {
+  const { selectedUser, getDirectMessage } = useAppContext();
+
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState("");
-  const [rows, setRows] = useState(1); // Start with 1 row for default height
+  const [rows, setRows] = useState(1);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const { handleFileChange } = props;
 
 
-
-  const handleSend =async ()=>{
-    if (message?.trim()) {
-    let msgData = new FormData()
-
-    msgData.append("message", message ? message : "");
+  const handleSend = async () => {
+    if (!message.trim() && selectedFiles.length === 0) return;
+    setIsLoading(true)
+    let msgData = new FormData();
+    msgData.append("message", message.trim());
     msgData.append("reciever_user_id", selectedUser?.id);
+
+
+    if (ArrayList.isArray(selectedFiles)) {
+      selectedFiles.forEach((file, index) => {
+        msgData.append(`media_file`, file);
+      });
+    }
 
     let response = await MessagesService.Create(msgData);
 
-
-    if(response){
-      setMessage(""); 
-      setRows(1); 
-      if(selectedUser){
-        getDirectMessage && getDirectMessage()
-      }
+    if (response) {
+      setMessage("");
+      setRows(1);
+      setSelectedFiles([]);
+      getDirectMessage && getDirectMessage();
+      setIsLoading(false)
     }
-  }
-  }
+  };
 
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedFiles((prev) => [...prev, ...files]);
+    e.target.value = ""; // reset so same file can be re-selected
+  };
 
+  const removeFile = (index) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
-
-  // Adjust rows dynamically based on content length
   useEffect(() => {
-    const lineCount = message.split('\n').length;
-    const newRows = Math.min(25, Math.max(1, lineCount)); // Max 25 rows
+    const lineCount = message.split("\n").length;
+    const newRows = Math.min(25, Math.max(1, lineCount));
     setRows(newRows);
   }, [message]);
 
   return (
-    <div
-      style={{
-        padding: "16px", // spacing inside sidebar
-        boxSizing: "border-box",
-      }}
-    >
+    <div style={{ padding: "16px", boxSizing: "border-box" }}>
       <div
         style={{
           borderRadius: "10px",
@@ -59,6 +66,7 @@ const MessageInput = (props) => {
           border: "1px solid #e0e0e0",
         }}
       >
+        {/* Textarea */}
         <textarea
           placeholder="Type a message..."
           value={message}
@@ -71,10 +79,9 @@ const MessageInput = (props) => {
             fontSize: "15px",
             borderRadius: "6px",
             border: "none",
-            boxSizing: "border-box",
             outline: "none",
-            minHeight: "40px", // Default height for normal input
-            overflowY: rows === 25 ? "auto" : "hidden", // Add scroll after 25 rows
+            minHeight: "40px",
+            overflowY: rows === 25 ? "auto" : "hidden",
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -83,18 +90,63 @@ const MessageInput = (props) => {
             }
           }}
         />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+
+        {/* Preview Section */}
+        {selectedFiles.length > 0 && (
+          <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {selectedFiles.map((file, index) => {
+              const isImage = file.type.startsWith("image/");
+              const isVideo = file.type.startsWith("video/");
+              const previewUrl = URL.createObjectURL(file);
+
+              return (
+                <div key={index} style={{ position: "relative" }}>
+                  {isImage && (
+                    <img
+                      src={previewUrl}
+                      alt={`preview-${index}`}
+                      style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "6px" }}
+                    />
+                  )}
+                  {isVideo && (
+                    <video
+                      src={previewUrl}
+                      controls
+                      style={{ width: "100px", height: "100px", borderRadius: "6px" }}
+                    />
+                  )}
+                  <span
+                    onClick={() => removeFile(index)}
+                    style={{
+                      position: "absolute",
+                      top: "-6px",
+                      right: "-6px",
+                      background: "#f00",
+                      color: "#fff",
+                      borderRadius: "50%",
+                      width: "20px",
+                      height: "20px",
+                      textAlign: "center",
+                      lineHeight: "20px",
+                      cursor: "pointer",
+                      fontSize: "12px",
+                    }}
+                  >
+                    ×
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Footer */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
           <div style={{ display: "flex", gap: "10px" }}>
             <span
               style={{ cursor: "pointer", fontSize: "18px" }}
               onClick={() => fileInputRef.current.click()}
-              title="Attach file"
+              title="Attach files"
             >
               📎
             </span>
@@ -103,23 +155,33 @@ const MessageInput = (props) => {
               ref={fileInputRef}
               onChange={handleFileChange}
               style={{ display: "none" }}
-               accept="image/*, video/*"
+              multiple
+              accept="image/*,video/*"
             />
           </div>
           <button
             onClick={handleSend}
-            disabled={!message.trim()}
+            disabled={!message.trim() && selectedFiles.length === 0 || isLoading}
             style={{
               fontSize: "18px",
               padding: "6px 12px",
-              backgroundColor: message.trim() ? "#0b81ff" : "#ccc",
+              backgroundColor: message.trim() || selectedFiles.length > 0 || isLoading ? "#0b81ff" : "#ccc",
               color: "#fff",
               border: "none",
               borderRadius: "4px",
-              cursor: message.trim() ? "pointer" : "not-allowed",
+              cursor: message.trim() || selectedFiles.length > 0 || isLoading ? "pointer" : "not-allowed",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: "40px",
+              height: "36px",
             }}
           >
-            ➤
+            {isLoading ? (
+              <span className="spinner" />
+            ) : (
+              "➤"
+            )}
           </button>
         </div>
       </div>
