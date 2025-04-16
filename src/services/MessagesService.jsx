@@ -42,7 +42,25 @@ class MessagesService {
           console.log(error);
         }
       }
+
+      static update = (data, callback) => {
+          apiClient
+            .put(`${endpoints().messageAPI}`,data)
+            .then((res) => {
+              return callback && callback(res)
+            })
+      }
     
+      static groupMessageReadAt = (data,callback) => {
+        try{
+          apiClient
+            .put(`${endpoints().messageAPI}/groupMessageReadAt`,data).then((res)=>{
+              return callback && callback(res)
+            })
+      }catch(err){
+          console.log(err);
+      }
+      }
 
 }
 export default MessagesService

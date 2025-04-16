@@ -22,6 +22,18 @@ const UserList = (props) => {
     }
   };
 
+
+const handleReadAt=async (userId)=>{
+  let data  = new FormData();
+  data.append("user_id", userId)
+  await MessagesService.update(data,(res)=>{
+    if(res){
+      getMessageList()
+    }
+  })
+}
+
+
   return (
     <div className="side-list">
       <ul>
@@ -31,6 +43,7 @@ const UserList = (props) => {
               className="row"
               key={user?.id}
               onClick={() => {
+                handleReadAt && handleReadAt(user?.id)
                 setSelectedChannel && setSelectedChannel(null)
                 setChannalMessageList && setChannalMessageList([])
                 setSelectedUser && setSelectedUser(user);
@@ -42,6 +55,8 @@ const UserList = (props) => {
                 last_name={user?.last_name}
                 media_url={user?.media}
                 size={25}
+                showCount
+                badgeCount={user?.read_at}
               />
             </li>
           ))}
