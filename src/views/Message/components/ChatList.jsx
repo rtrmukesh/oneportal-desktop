@@ -42,7 +42,6 @@ const ChatList = (props) => {
     }, []);
 
 
-
     let messages = selectedUser ? dirMessages.slice().reverse() : selectedChannel ? channalMessageList : []
 
     useEffect(() => {

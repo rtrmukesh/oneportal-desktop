@@ -3,6 +3,8 @@ import MessagesService from '../services/MessagesService';
 import ChannelMessagesService from '../services/ChannelMessagesService';
 import useNotificationSocket from '../sokect/useNotificationSocket';
 import MessageChannelService from '../services/MessageChannelService';
+import EStore from '../lib/EStore';
+import { C_ID, S_ID } from '../Helper/EStore';
 
 // Create the context
 const AppContext = createContext();
@@ -19,12 +21,11 @@ export const AppProvider = ({ children }) => {
 
 
 
-
   const getDirectMessage = async (inReceiverId=null) => {
+    let selectedId = await EStore.getItem(S_ID)
     try {
       // setIsLoading(true);
-  
-      const response = await MessagesService.getMessages(inReceiverId ? inReceiverId :selectedUser?.id);
+      const response = await MessagesService.getMessages(inReceiverId ? inReceiverId :selectedUser?.id  ? selectedUser?.id : selectedId);
       const { receiverMessages = [], senderMessages = [] } = response?.data || {};
   
       const formatMessages = (messages, isSender) =>
@@ -49,8 +50,10 @@ export const AppProvider = ({ children }) => {
   };
 
   let getChannalMessage = async (channel=null) => {
+    let selectedId = await EStore.getItem(C_ID)
+
     let response = await ChannelMessagesService.search({
-      channel_id: channel ? channel?.channel_id: selectedChannel?.channel_id,
+      channel_id: channel ? channel?.channel_id: selectedChannel?.channel_id ? selectedChannel?.channel_id : selectedId,
     });
     let data = response && response?.data;
     setChannalMessageList(data)
@@ -77,8 +80,11 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  let paramValue={
+    getChannelList, getMessageList, getDirectMessage, getChannalMessage
+  }
 
-  useNotificationSocket(getChannelList, getMessageList)
+  useNotificationSocket(paramValue)
 
 
 
