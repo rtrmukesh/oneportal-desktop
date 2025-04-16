@@ -6,17 +6,18 @@ const AvatarCard = ({
   media_url = '',
   size = 40,
   showName = true,
-  color
+  color,
+  isTransprent=false
 }) => {
   const initials = `${first_name ? first_name?.charAt(0):""}${last_name ? last_name?.charAt(0):""}`.toUpperCase();
   const fullName = `${first_name} ${last_name}`;
-
+  
   const avatarStyle = {
     width: size,
     height: size,
     borderRadius: '23%',
-    backgroundColor: color ? color : 'gray',
-    color: '#fff',
+    backgroundColor: isTransprent ? "transprent": color ? color : 'gray',
+    color: isTransprent ?  "#f0f0f0" :  '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

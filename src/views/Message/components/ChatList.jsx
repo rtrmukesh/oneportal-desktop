@@ -5,6 +5,12 @@ import AvatarCard from '../../../components/UserCard';
 import { useAppContext } from '../../../context/AppContext';
 import Color from '../../../lib/Color';
 import DateTime from '../../../lib/DateTime';
+import DynoName from './DynoName';
+
+export const isKeyAvailable = (obj, key) => {
+    let isKey = Object.keys(obj).includes(key);
+    return isKey
+}
 
 const ChatList = (props) => {
 
@@ -15,17 +21,14 @@ const ChatList = (props) => {
     const scrollToBottom = () => {
         const chatElement = document.getElementById("mainChat");
         if (chatElement) {
-          chatElement.scrollTo({
-            top: chatElement.scrollHeight,
-            behavior: "smooth",
-          });
+            chatElement.scrollTo({
+                top: chatElement.scrollHeight,
+                behavior: "smooth",
+            });
         }
-      };
+    };
 
-    let isKeyAvailable = (obj, key) => {
-        let isKey = Object.keys(obj).includes(key);
-        return isKey
-    }
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -45,9 +48,9 @@ const ChatList = (props) => {
 
     useEffect(() => {
         setTimeout(() => {
-          scrollToBottom();
-        }, 100); 
-      }, [messages]);
+            scrollToBottom();
+        }, 100);
+    }, [messages]);
 
 
 
@@ -55,7 +58,7 @@ const ChatList = (props) => {
         return (
             <div
                 key={index}
-                className={`message ${msg.isSender ? "own-message": "other-message"}`}
+                className={`message ${msg.isSender ? "own-message" : "other-message"}`}
             >
                 <div className="relative">
 
@@ -73,12 +76,9 @@ const ChatList = (props) => {
                         </div>
                     )}
                 </div>
-                {(isKeyAvailable(msg, "isSender") && !msg.isSender) && (
-                    <span style={{color: Color.getColorByUser(`${msg?.first_name ? msg?.first_name : ""}${msg?.last_name ? msg?.last_name : ""}`)}} className="text-start w-100 d-flex  m-0 p-0  fw-semibold small">
-                        {`${msg?.first_name ? msg?.first_name : ""} ${msg?.last_name ? msg?.last_name : ""}`}
-                    </span>
-                )}
-                               {msg.media_url && <MediaViewer media_url={msg.media_url} />}
+                <DynoName msg={msg} />
+
+                {msg.media_url && <MediaViewer media_url={msg.media_url} />}
 
                 {msg.message && (
                     <div className="message-content" dangerouslySetInnerHTML={{ __html: msg.message }} />
@@ -109,7 +109,9 @@ const ChatList = (props) => {
                     {/* Show avatar only for received messages */}
                     {selectedChannel && (isKeyAvailable(msg, "isSender") && !msg.isSender) && (
                         <div className="me-2">
-                            <AvatarCard first_name={msg?.first_name} last_name={msg?.last_name} showName={false} color={Color.getColorByUser(`${msg?.first_name ? msg?.first_name : ""}${msg?.last_name ? msg?.last_name : ""}`)} />
+                            <AvatarCard first_name={msg?.first_name} last_name={msg?.last_name} showName={false} color={Color.getColorByUser(`${msg?.first_name ? msg?.first_name : ""}${msg?.last_name ? msg?.last_name : ""}`)}
+                            isTransprent={index == 0 ? false : msg?.user_id == messages?.slice()?.reverse()[index - 1]?.user_id}
+                            />
                         </div>
                     )}
                     <div className='w-100'>
