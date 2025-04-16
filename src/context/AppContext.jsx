@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import MessagesService from '../services/MessagesService';
 import ChannelMessagesService from '../services/ChannelMessagesService';
+import useNotificationSocket from '../sokect/useNotificationSocket';
+import MessageChannelService from '../services/MessageChannelService';
 
 // Create the context
 const AppContext = createContext();
@@ -12,6 +14,10 @@ export const AppProvider = ({ children }) => {
 
   const [dirMessages, setDirMessages] = useState([]);
   const [channalMessageList, setChannalMessageList] = useState([])
+  const [channelList, setChannelList] = useState([])
+  const [messageUserList, setMessageUserList] = useState([])
+
+
 
 
   const getDirectMessage = async (inReceiverId=null) => {
@@ -50,6 +56,31 @@ export const AppProvider = ({ children }) => {
     setChannalMessageList(data)
   }
 
+  const getChannelList = async () => {
+    try {
+      const response = await MessageChannelService.search();
+      const data = response?.data?.data;
+      setChannelList(data);
+    } catch (err) {
+      console.error("Channel list error:", err);
+    }
+  };
+
+
+  const getMessageList = async () => {
+    try {
+      const response = await MessagesService.search();
+      const data = response?.data?.data;
+      setMessageUserList(data);
+    } catch (err) {
+      console.error("Message list error:", err);
+    }
+  };
+
+
+  useNotificationSocket(getChannelList, getMessageList)
+
+
 
   return (
     <AppContext.Provider
@@ -63,6 +94,8 @@ export const AppProvider = ({ children }) => {
         dirMessages,
         setDirMessages,
         channalMessageList,
+        getChannelList,channelList,
+        getMessageList,messageUserList
       }}
     >
       {children}

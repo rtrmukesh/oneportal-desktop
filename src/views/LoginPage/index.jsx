@@ -4,7 +4,8 @@ import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import LoginService from '../../services/LoginService';
 import EStore from '../../lib/EStore';
-import { SESSION_TOKEN, TIME_ZONE } from '../../Helper/EStore';
+import { SESSION_TOKEN, TIME_ZONE, USER_ID } from '../../Helper/EStore';
+import { connectSocket } from '../../services/ScoketService';
 
 function LoginPage() {
     
@@ -43,6 +44,8 @@ function LoginPage() {
 
               await EStore.setItem(SESSION_TOKEN, token);
               await EStore.setItem(TIME_ZONE, time_zone);
+              await EStore.setItem(USER_ID, id);
+              connectSocket(id)
               navigate('/message')
 
         }

@@ -5,22 +5,12 @@ import { useAppContext } from '../../../context/AppContext';
 import MessagesService from '../../../services/MessagesService';
 
 const ChannelList = ({ }) => {
-  const { setSelectedChannel, setSelectedUser, setDirMessages, getChannalMessage } = useAppContext();
+  const { setSelectedChannel, setSelectedUser, setDirMessages, getChannalMessage, channelList, getChannelList  } = useAppContext();
 
-  const [channelList, setChannelList] = React.useState([]);
   useEffect(() => {
-    getChannelList();
+    getChannelList && getChannelList();
   }, []);
 
-  const getChannelList = async () => {
-    try {
-      const response = await MessageChannelService.search();
-      const data = response?.data?.data;
-      setChannelList(data);
-    } catch (err) {
-      console.error("Channel list error:", err);
-    }
-  };
 
   const badgeStyle = {
     width: 18,
@@ -50,7 +40,7 @@ const ChannelList = ({ }) => {
     <div className="side-list">
       <ul>
         {ArrayList.isArray(channelList) && channelList.map((channel) => (
-          <li className='d-flex' style={{paddingLeft: 0,justifyContent:"space-between"}} key={channel} onClick={() => {
+          <li className='d-flex' style={{paddingLeft: 0,justifyContent:"space-between"}} key={channel?.channel_id} onClick={() => {
             handleReadAt && handleReadAt(channel)
             setDirMessages && setDirMessages([])
             setSelectedUser && setSelectedUser(null)
