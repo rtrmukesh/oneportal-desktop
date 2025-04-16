@@ -6,10 +6,14 @@ const Store = require('electron-store');
 const { existsSync } = require('fs');
 
 app.disableHardwareAcceleration();
+app.setName('Oneportal Desktop');
 
 const store = new Store();
 
 const isDev = process.env.NODE_ENV === 'development';
+const appIcon = process.env.NODE_ENV === 'production'
+  ? path.join(__dirname, 'resources', 'app', 'icon.png') // For packaged app
+  : path.join(__dirname, 'icon.png');
 
 let win;
 
@@ -34,6 +38,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: appIcon,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,

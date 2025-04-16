@@ -1,26 +1,15 @@
-import React, { useEffect, useState } from "react";
-import MessagesService from "../../../services/MessagesService";
-import ArrayList from "../../../lib/ArrayList";
+import React, { useEffect } from "react";
 import AvatarCard from "../../../components/UserCard";
 import { useAppContext } from "../../../context/AppContext";
+import ArrayList from "../../../lib/ArrayList";
+import MessagesService from "../../../services/MessagesService";
 
 const UserList = (props) => {
-  const { setSelectedUser, setSelectedChannel, getDirectMessage, setChannalMessageList } = useAppContext();
-  const [messageUserList, setMessageUserList] = useState([]);
+  const { setSelectedUser, setSelectedChannel, getDirectMessage, setChannalMessageList, getMessageList,messageUserList } = useAppContext();
 
   useEffect(() => {
-    getMessageList();
+    getMessageList && getMessageList();
   }, []);
-
-  const getMessageList = async () => {
-    try {
-      const response = await MessagesService.search();
-      const data = response?.data?.data;
-      setMessageUserList(data);
-    } catch (err) {
-      console.error("Message list error:", err);
-    }
-  };
 
 
 const handleReadAt=async (userId)=>{
