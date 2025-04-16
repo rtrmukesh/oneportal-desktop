@@ -3,6 +3,8 @@ import AvatarCard from "../../../components/UserCard";
 import { useAppContext } from "../../../context/AppContext";
 import ArrayList from "../../../lib/ArrayList";
 import MessagesService from "../../../services/MessagesService";
+import EStore from "../../../lib/EStore";
+import { C_ID, S_ID } from "../../../Helper/EStore";
 
 const UserList = (props) => {
   const { setSelectedUser, setSelectedChannel, getDirectMessage, setChannalMessageList, getMessageList,messageUserList } = useAppContext();
@@ -31,7 +33,9 @@ const handleReadAt=async (userId)=>{
             <li
               className="row"
               key={user?.id}
-              onClick={() => {
+              onClick={async () => {
+                await EStore.removeItem(C_ID)
+                await EStore.setItem(S_ID, user?.id)
                 handleReadAt && handleReadAt(user?.id)
                 setSelectedChannel && setSelectedChannel(null)
                 setChannalMessageList && setChannalMessageList([])

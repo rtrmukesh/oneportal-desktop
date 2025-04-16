@@ -3,6 +3,8 @@ import MessageChannelService from '../../../services/MessageChannelService';
 import ArrayList from '../../../lib/ArrayList';
 import { useAppContext } from '../../../context/AppContext';
 import MessagesService from '../../../services/MessagesService';
+import EStore from '../../../lib/EStore';
+import { C_ID, S_ID } from '../../../Helper/EStore';
 
 const ChannelList = ({ }) => {
   const { setSelectedChannel, setSelectedUser, setDirMessages, getChannalMessage, channelList, getChannelList  } = useAppContext();
@@ -40,7 +42,9 @@ const ChannelList = ({ }) => {
     <div className="side-list">
       <ul>
         {ArrayList.isArray(channelList) && channelList.map((channel) => (
-          <li className='d-flex' style={{paddingLeft: 0,justifyContent:"space-between"}} key={channel?.channel_id} onClick={() => {
+          <li className='d-flex' style={{paddingLeft: 0,justifyContent:"space-between"}} key={channel?.channel_id} onClick={async () => {
+            await EStore.removeItem(S_ID)
+            await EStore.setItem(C_ID, channel?.channel_id)
             handleReadAt && handleReadAt(channel)
             setDirMessages && setDirMessages([])
             setSelectedUser && setSelectedUser(null)
