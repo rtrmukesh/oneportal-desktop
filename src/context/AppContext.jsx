@@ -42,9 +42,9 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  let getChannalMessage = async (channel) => {
+  let getChannalMessage = async (channel=null) => {
     let response = await ChannelMessagesService.search({
-      channel_id: channel && channel?.channel_id,
+      channel_id: channel ? channel?.channel_id: selectedChannel?.channel_id,
     });
     let data = response && response?.data;
     setChannalMessageList(data)
@@ -62,7 +62,7 @@ export const AppProvider = ({ children }) => {
         getDirectMessage,
         dirMessages,
         setDirMessages,
-        channalMessageList
+        channalMessageList,
       }}
     >
       {children}
