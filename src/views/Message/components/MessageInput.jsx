@@ -2,9 +2,10 @@ import React, { useRef, useState, useEffect } from "react";
 import MessagesService from "../../../services/MessagesService";
 import { useAppContext } from "../../../context/AppContext";
 import ArrayList from "../../../lib/ArrayList";
+import ChannelMessagesService from "../../../services/ChannelMessagesService";
 
 const MessageInput = () => {
-  const { selectedUser, getDirectMessage, selectedChannel } = useAppContext();
+  const { selectedUser, getDirectMessage, selectedChannel, getChannalMessage } = useAppContext();
 
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -15,11 +16,18 @@ const MessageInput = () => {
 
 
   const handleSend = async () => {
-    if (!message.trim() && selectedFiles.length === 0 || selectedChannel) return;
+    if (!message.trim() && selectedFiles.length === 0) return;
     setIsLoading(true)
     let msgData = new FormData();
     msgData.append("message", message.trim());
-    msgData.append("reciever_user_id", selectedUser?.id);
+
+    if(selectedUser){
+      msgData.append("reciever_user_id", selectedUser?.id);
+    }
+
+    if(selectedChannel){
+      msgData.append("channel_id", selectedChannel?.channel_id)
+    }
 
 
     if (ArrayList.isArray(selectedFiles)) {
@@ -28,13 +36,26 @@ const MessageInput = () => {
       });
     }
 
-    let response = await MessagesService.Create(msgData);
+    let response=null
+
+    if(selectedChannel){
+       response = await ChannelMessagesService.Create(msgData);
+    }
+
+    if(selectedUser){
+       response = await MessagesService.Create(msgData);
+    }
 
     if (response) {
       setMessage("");
       setRows(1);
       setSelectedFiles([]);
-      getDirectMessage && getDirectMessage();
+      if(selectedUser){
+        getDirectMessage && getDirectMessage();
+      }
+      if(selectedChannel){
+        getChannalMessage && getChannalMessage()
+      }
       setIsLoading(false)
     }
   };
@@ -144,8 +165,11 @@ const MessageInput = () => {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
           <div style={{ display: "flex", gap: "10px" }}>
             <span
-              style={{ cursor: "pointer", fontSize: "18px" }}
-              onClick={() => fileInputRef.current.click()}
+              style={{  cursor: ArrayList.isArray(selectedFiles) ? "not-allowed" : "pointer", fontSize: "18px" }}
+              onClick={() =>{
+                if (ArrayList.isArray(selectedFiles)) return;
+                fileInputRef.current.click()
+              }}
               title="Attach files"
             >
               📎
@@ -161,7 +185,7 @@ const MessageInput = () => {
           </div>
           <button
             onClick={handleSend}
-            disabled={!message.trim() && selectedFiles.length === 0 || isLoading || selectedChannel}
+            disabled={!message.trim() && selectedFiles.length === 0 || isLoading}
             style={{
               fontSize: "18px",
               padding: "6px 12px",

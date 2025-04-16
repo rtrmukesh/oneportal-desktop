@@ -210,6 +210,26 @@ body {
   background-color: white;
 }
 
+.messages::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+/* Show styled scrollbar on hover */
+.messages:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.messages:hover::-webkit-scrollbar {
+  background-color: white;
+}
+
+
 
 
 
