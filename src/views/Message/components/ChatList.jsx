@@ -29,7 +29,6 @@ const ChatList = (props) => {
     };
 
 
-
     useEffect(() => {
         const handleClickOutside = (event) => {
             setShowMenu(false);
@@ -44,7 +43,7 @@ const ChatList = (props) => {
 
 
 
-    let messages = selectedUser ? dirMessages : selectedChannel ? channalMessageList : []
+    let messages = selectedUser ? dirMessages.slice().reverse() : selectedChannel ? channalMessageList : []
 
     useEffect(() => {
         setTimeout(() => {
