@@ -125,6 +125,7 @@ const UserList = (props) => {
                 size={25}
                 showCount
                 badgeCount={user?.read_at}
+                data={user}
               />
             </li>
           ))}
