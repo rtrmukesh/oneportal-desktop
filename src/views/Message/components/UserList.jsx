@@ -1,46 +1,121 @@
 import React, { useEffect } from "react";
 import AvatarCard from "../../../components/UserCard";
 import { useAppContext } from "../../../context/AppContext";
-import ArrayList from "../../../lib/ArrayList";
-import MessagesService from "../../../services/MessagesService";
-import EStore from "../../../lib/EStore";
 import { C_ID, S_ID } from "../../../Helper/EStore";
+import ArrayList from "../../../lib/ArrayList";
+import EStore from "../../../lib/EStore";
+import MessagesService from "../../../services/MessagesService";
 
 const UserList = (props) => {
-  const { setSelectedUser, setSelectedChannel, getDirectMessage, setChannalMessageList, getMessageList,messageUserList } = useAppContext();
+  let { search } = props;
+  const { setSelectedUser, setSelectedChannel, getDirectMessage, setChannalMessageList, getMessageList, messageUserList, channelList, setDirMessages, getChannalMessage, getChannelList } = useAppContext();
 
   useEffect(() => {
     getMessageList && getMessageList();
+    getChannelList && getChannelList()
   }, []);
 
 
-const handleReadAt=async (userId)=>{
-  let data  = new FormData();
-  data.append("user_id", userId)
-  await MessagesService.update(data,(res)=>{
-    if(res){
-      getMessageList()
-    }
-  })
-}
+  const formatMessageChannelList = (messageList = [], channels = []) => {
+    return [
+      ...(Array.isArray(channels) ? channels.map((data) => ({
+        channel_id: data?.channel_id,
+        type: "channel",
+        first_name: data?.channel_name,
+        last_name: data?.last_name,
+        media: null,
+        recent_message: data?.mostRecentMessage,
+        recent_message_timestamp: data?.timeStamp,
+        isUnRead: false,
+        showLocationShiftPermission: false,
+        current_shift_name: null,
+        current_location_name: null,
+        channel_name: data?.channel_name,
+        read_at: data?.unreadCount,
+        user_role: data?.user_role,
+        user_filter_type: data?.user_filter_type,
+        status: data?.status,
+        location: data?.location,
+        media_url: data?.media_url,
+        allowToSend: data?.allowToSend,
+        isAllowToSend: data?.isAllowToSend
+
+
+      })) : []),
+      ...(Array.isArray(messageList) ? messageList.map((data) => ({
+        id: data?.id,
+        type: "message",
+        first_name: data?.first_name,
+        last_name: data?.last_name,
+        media: data?.media,
+        recent_message: data?.recent_last_message,
+        recent_message_timestamp: data?.recent_message_timestamp,
+        isUnRead: data?.isUnRead,
+        showLocationShiftPermission: data?.showLocationShiftPermission,
+        current_shift_name: data?.current_shift_name,
+        current_location_name: data?.current_location_name,
+        media_url: data?.media_url,
+        read_at: data?.read_at,
+      })) : []),
+    ].sort((a, b) =>
+      new Date(b.recent_message_timestamp || 0) - new Date(a.recent_message_timestamp || 0)
+    );
+  };
+
+  
+
+  let mergedList = formatMessageChannelList(messageUserList, channelList).filter(item =>
+    item?.first_name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+
+  const handleReadAt = async (userId) => {
+    let data = new FormData();
+    data.append("user_id", userId)
+    await MessagesService.update(data, (res) => {
+      if (res) {
+        getMessageList()
+      }
+    })
+  }
+
+  const handleChannelReadAt = async (channel) => {
+    const data = new FormData();
+    data.append("channelId", channel?.channel_id);
+    await MessagesService.groupMessageReadAt(data, (res) => {
+      if (res) {
+        getChannelList()
+      }
+    })
+  }
 
 
   return (
     <div className="side-list">
       <ul>
-        {ArrayList.isArray(messageUserList) &&
-          messageUserList.map((user) => (
+        {ArrayList.isArray(mergedList) &&
+          mergedList.map((user, index) => (
             <li
               className="row"
-              key={user?.id}
+              key={index}
               onClick={async () => {
-                await EStore.removeItem(C_ID)
-                await EStore.setItem(S_ID, user?.id)
-                handleReadAt && handleReadAt(user?.id)
-                setSelectedChannel && setSelectedChannel(null)
-                setChannalMessageList && setChannalMessageList([])
-                setSelectedUser && setSelectedUser(user);
-                getDirectMessage && getDirectMessage(user?.id)
+                if (user?.type == "message") {
+                  await EStore.removeItem(C_ID)
+                  await EStore.setItem(S_ID, user?.id)
+                  handleReadAt && handleReadAt(user?.id)
+                  setSelectedChannel && setSelectedChannel(null)
+                  setChannalMessageList && setChannalMessageList([])
+                  setSelectedUser && setSelectedUser(user);
+                  getDirectMessage && getDirectMessage(user?.id)
+                } else {
+                  await EStore.removeItem(S_ID)
+                  await EStore.setItem(C_ID, user?.channel_id)
+                  handleChannelReadAt && handleChannelReadAt(user)
+                  setDirMessages && setDirMessages([])
+                  setSelectedUser && setSelectedUser(null)
+                  setSelectedChannel && setSelectedChannel(user)
+                  getChannalMessage && getChannalMessage(user)
+                }
               }}
             >
               <AvatarCard
