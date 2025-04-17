@@ -2,11 +2,11 @@ import React from "react";
 import { FiRefreshCw } from "react-icons/fi";
 
 const RefreshButton = (props) => {
-    let { onRefresh, isLoading } = props;
+    let { onRefresh, isLoading, color } = props;
     return (
         <button
             type="button"
-            className="btn btn-light"
+            className={`btn ${color ? color :"btn-light"}`}
             onClick={onRefresh}
             title="Refresh"
             disabled={isLoading}

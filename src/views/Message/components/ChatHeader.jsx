@@ -26,6 +26,7 @@ const ChatHeader = ({ channelName, userName,  }) => {
         <RefreshButton
         isLoading={isLoading}
         onRefresh={()=>onRefresh()}
+        color="btn-primary"
         />
       </div>
   );
