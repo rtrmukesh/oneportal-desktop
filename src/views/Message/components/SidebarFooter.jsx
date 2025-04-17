@@ -67,6 +67,8 @@ const SidebarFooter = () => {
               borderRadius: '8px',
               boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
               zIndex: 100,
+              padding:0,
+              margin:0
             }}
           >
             <button
@@ -75,6 +77,9 @@ const SidebarFooter = () => {
                 setIsMenuOpen(false);
                 await EStore.clear();
                 navigate('/');
+              }}
+              style={{
+                padding:20
               }}
             >
               Logout

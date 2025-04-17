@@ -95,20 +95,20 @@ const ChatList = (props) => {
         return (
             <div
                 key={index}
-                className={`message ${msg.isSender ? "own-message" : "other-message"}`}
+                className={`message ${msg?.isSender ? "own-message" : "other-message"}`}
             >
                 <div className="relative">
 
                     <FaChevronDown className="ml-2 message-options" onClick={() => setShowMenu(index)} />
 
-                    {(showInfoIndex == index && msg.isSender) && <ReadAtToolTip msg={msg} />}
+                    {(showInfoIndex == index && msg?.isSender) && <ReadAtToolTip msg={msg} />}
 
 
                     {(showMenu && showMenu == index) && (
                         <div className="menu-dropdown dropup">
                             <div className="arrow-up dropup" />
                             <ul className="dropdown-list ">
-                                {msg.isSender && <li onClick={() => {
+                                {msg?.isSender && <li onClick={() => {
                                     setShowInfoIndex(index)
                                     setShowMenu(null)
                                 }}><FaInfoCircle /> info</li>}
@@ -132,7 +132,7 @@ const ChatList = (props) => {
                 <div className="message-footer">
                     <span className="timestamp">{DateTime.formatTimestamp(msg?.timestamp)}</span>
 
-                    {!selectedChannel && msg.isSender && (
+                    {!selectedChannel && msg?.isSender && (
                         msg.read_at ? (
                             <FaCheckDouble color="#34b7f1" />
                         ) : (
@@ -149,10 +149,10 @@ const ChatList = (props) => {
             {messages.slice().reverse().map((msg, index) => (
                 <div
                     key={index}
-                    className={`sample d-flex  ${msg.isSender ? "own-message" : "other-message"}`}
+                    className={`sample d-flex  ${msg?.isSender ? "own-message" : "other-message"}`}
                 >
                     {/* Show avatar only for received messages */}
-                    {selectedChannel && (isKeyAvailable(msg, "isSender") && !msg.isSender) && (
+                    {selectedChannel && (isKeyAvailable(msg, "isSender") && !msg?.isSender) && (
                         <div className="me-2">
                             <AvatarCard first_name={msg?.first_name} last_name={msg?.last_name} showName={false} color={Color.getColorByUser(`${msg?.first_name ? msg?.first_name : ""}${msg?.last_name ? msg?.last_name : ""}`)}
                                 isTransprent={index == 0 ? false : msg?.user_id == messages?.slice()?.reverse()[index - 1]?.user_id}

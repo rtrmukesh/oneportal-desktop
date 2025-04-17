@@ -495,3 +495,14 @@ cursor: pointer;
 .dropdown-toggle::after {
   display: none !important;
 }
+
+.dropdown-item:hover{
+  color: white;
+  background-color: rgb(138, 130, 130);
+  border-color: #0d6efd;
+  border-radius: 4px 4px 0px 0px ;
+}
+
+.dropdown-divider{
+  margin: 0px;
+}
