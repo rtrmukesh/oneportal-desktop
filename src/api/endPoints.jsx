@@ -8,4 +8,5 @@ export const endpoints = () => ({
   MessageChannelApi: appApi("v1/messageChannel"),
   messageAPI: appApi("v1/message"),
   channelMessageAPI: appApi("v1/channelMessage"),
+  userRolePermissionAPI: appApi("v1/user/role/permission"),
 });

@@ -6,7 +6,7 @@ const Store = require('electron-store');
 const { existsSync } = require('fs');
 
 app.disableHardwareAcceleration();
-app.setName('Oneportal Desktop');
+app.setName('One Portal');
 
 const store = new Store();
 

@@ -62,7 +62,7 @@
   },
   "build": {
     "appId": "com.oneportaldesktop",
-    "productName": "OnePortal Desktop",
+    "productName": "One Portal",
     "icon": "build/icon",
     "files": [
       "main.cjs",

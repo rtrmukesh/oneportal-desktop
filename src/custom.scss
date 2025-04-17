@@ -492,3 +492,6 @@ cursor: pointer;
   border-color: #0d6efd;
 }
 
+.dropdown-toggle::after {
+  display: none !important;
+}

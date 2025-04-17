@@ -16,5 +16,13 @@ class DateTime {
           return messageDate.format("DD-MMM-YY, hh:mm A");
         }
       };
+      static UTCtoLocalTimeAndMmmFormat(date) {
+        if (!date) {
+          return null;
+        }
+        let gmtDateTime = moment.utc(date);
+    
+        return gmtDateTime.local().format("DD-MMM-YY hh:mm A");
+      }
 }
 export default DateTime

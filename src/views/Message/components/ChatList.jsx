@@ -3,9 +3,13 @@ import { FaCheck, FaCheckDouble, FaChevronDown, FaDownload, FaInfoCircle, FaShar
 import MediaViewer from '../../../components/MediaViewer';
 import AvatarCard from '../../../components/UserCard';
 import { useAppContext } from '../../../context/AppContext';
+import Permission from '../../../Helper/Permission';
 import Color from '../../../lib/Color';
 import DateTime from '../../../lib/DateTime';
+import MessagesService from '../../../services/MessagesService';
+import UserRolePermissionService from '../../../services/UserRolePermissionService';
 import DynoName from './DynoName';
+import ReadAtToolTip from './ReadAtToolTip';
 
 export const isKeyAvailable = (obj, key) => {
     let isKey = Object.keys(obj).includes(key);
@@ -14,9 +18,26 @@ export const isKeyAvailable = (obj, key) => {
 
 const ChatList = (props) => {
 
-    const { selectedUser, selectedChannel, dirMessages, channalMessageList } = useAppContext();
+    const { selectedUser, selectedChannel, dirMessages, channalMessageList, onRefresh } = useAppContext();
     let { } = props;
     const [showMenu, setShowMenu] = useState(null);
+    const [showInfoIndex, setShowInfoIndex] = useState(null)
+    const [{ manageOthersPermission, deletePermission }, setPermission] = useState({ manageOthersPermission: false, deletePermission: false })
+
+
+    useEffect(() => {
+        getRolePermission()
+    }, [])
+
+    let getRolePermission = async () => {
+        let deletePermission = await UserRolePermissionService.hasPermission(Permission.MESSAGE_DELETE);
+        let manageOthersPermission = await UserRolePermissionService.hasPermission(Permission.MESSAGE_MANAGE_OTHERS);
+        setPermission({
+            manageOthersPermission: manageOthersPermission,
+            deletePermission: deletePermission
+        })
+    }
+
 
     const scrollToBottom = () => {
         const chatElement = document.getElementById("mainChat");
@@ -28,11 +49,12 @@ const ChatList = (props) => {
         }
     };
 
-
     useEffect(() => {
         const handleClickOutside = (event) => {
-            setShowMenu(false);
-            // setShowInfo(false);
+            if (!event?.target?.closest('.menu-dropdown') && !event?.target?.closest('.message-options')) {
+                setShowMenu(null);
+                setShowInfoIndex(null);
+            }
         };
 
         document.addEventListener("mousedown", handleClickOutside);
@@ -40,6 +62,20 @@ const ChatList = (props) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+
+    const handleDelete = async (msg) => {
+        await MessagesService.delete(msg?.id, (err, res) => {
+            if (res) {
+                setShowMenu(false);
+                onRefresh && onRefresh();
+            }
+            if (err) {
+                setShowMenu(false);
+            }
+        });
+    };
+
 
 
     let messages = selectedUser ? dirMessages.slice().reverse() : selectedChannel ? channalMessageList : []
@@ -51,8 +87,11 @@ const ChatList = (props) => {
     }, [messages]);
 
 
-
     const renderChatMessage = (msg, index) => {
+        let isShowDeleteButton = selectedChannel ? false: msg?.isSender
+            ? deletePermission
+            : deletePermission && manageOthersPermission;
+            
         return (
             <div
                 key={index}
@@ -62,14 +101,22 @@ const ChatList = (props) => {
 
                     <FaChevronDown className="ml-2 message-options" onClick={() => setShowMenu(index)} />
 
+                    {(showInfoIndex == index && msg.isSender) && <ReadAtToolTip msg={msg} />}
+
+
                     {(showMenu && showMenu == index) && (
                         <div className="menu-dropdown dropup">
                             <div className="arrow-up dropup" />
                             <ul className="dropdown-list ">
-                                <li><FaInfoCircle /> info</li>
+                                {msg.isSender && <li onClick={() => {
+                                    setShowInfoIndex(index)
+                                    setShowMenu(null)
+                                }}><FaInfoCircle /> info</li>}
                                 {msg.media_url && <li><FaDownload /> Download</li>}
                                 <li><FaShare /> Forward</li>
-                                <li className="text-danger"><FaTrash /> Delete</li>
+                                {isShowDeleteButton && <li onClick={() => {
+                                    handleDelete(msg)
+                                }} className="text-danger"><FaTrash /> Delete</li>}
                             </ul>
                         </div>
                     )}
@@ -108,7 +155,7 @@ const ChatList = (props) => {
                     {selectedChannel && (isKeyAvailable(msg, "isSender") && !msg.isSender) && (
                         <div className="me-2">
                             <AvatarCard first_name={msg?.first_name} last_name={msg?.last_name} showName={false} color={Color.getColorByUser(`${msg?.first_name ? msg?.first_name : ""}${msg?.last_name ? msg?.last_name : ""}`)}
-                            isTransprent={index == 0 ? false : msg?.user_id == messages?.slice()?.reverse()[index - 1]?.user_id}
+                                isTransprent={index == 0 ? false : msg?.user_id == messages?.slice()?.reverse()[index - 1]?.user_id}
                             />
                         </div>
                     )}
