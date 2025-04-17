@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import MessagesService from '../services/MessagesService';
 import ChannelMessagesService from '../services/ChannelMessagesService';
 import useNotificationSocket from '../sokect/useNotificationSocket';
@@ -114,6 +114,14 @@ export const AppProvider = ({ children }) => {
     }
   }
 
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      onRefresh(true);
+    }, 60000); // 60000ms = 1 minute
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [onRefresh]);
 
   return (
     <AppContext.Provider
