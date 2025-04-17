@@ -9,11 +9,28 @@ const AvatarCard = ({
   color,
   isTransprent = false,
   badgeCount = 0,
-  showCount
+  showCount,
+  data
 }) => {
   const initials = `${first_name ? first_name?.charAt(0) : ""}${last_name ? last_name?.charAt(0) : ""}`.toUpperCase();
   const fullName = `${first_name} ${last_name}`;
 
+  let locationPart = data?.current_location_name
+  ? `${data?.current_location_name}`
+  : "";
+let shiftPart = data?.current_shift_name
+  ? `${data?.current_shift_name}`
+  : "";
+
+let locationShiftPart =
+  locationPart && shiftPart
+      ? `(${locationPart}, ${shiftPart})`
+      : locationPart
+          ? `(${locationPart})`
+          : shiftPart
+              ? `(${shiftPart})`
+              : "";
+              
   const avatarStyle = {
     width: size,
     height: size,
@@ -31,12 +48,22 @@ const AvatarCard = ({
   };
 
   const nameStyle = {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: 500,
     lineHeight: 1.2,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+  };
+
+  const locationStyle = {
+    fontSize: 10,
+    fontWeight: 500,
+    lineHeight: 1.2,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    marginTop:4.5
   };
 
   const badgeStyle = {
@@ -68,6 +95,9 @@ const AvatarCard = ({
           )}
         </div>
         {showName && <span style={nameStyle}>{fullName}</span>}
+        {locationShiftPart && <span  style={locationStyle}>
+                    {locationShiftPart}
+                </span>}
       </div>
       {(badgeCount > 0 && showCount) && (
         <div style={{ justifyContent: "end", display: "flex",margin:0,padding:0 }}>

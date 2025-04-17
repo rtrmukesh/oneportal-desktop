@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { connectSocket, getSocketInstance, disconnectSocket } from '../services/ScoketService'; // Update the path as needed
 import appIcon from "../../build/icon.png";
 import EStore from '../lib/EStore';
-import { C_ID, S_ID, USER_ID } from '../Helper/EStore';
+import { C_ID, S_ID, SESSION_TOKEN, USER_ID } from '../Helper/EStore';
+import Number from '../lib/Number';
 
 const useNotificationSocket = (props) => {
 
@@ -10,7 +11,8 @@ const useNotificationSocket = (props) => {
     useEffect(() => {
         const fetchUserIdAndConnectSocket = async () => {
             const userId = await EStore.getItem(USER_ID); // Fetch the userId from storage
-            if (!userId) {
+            const sessionToken = await EStore.getItem(SESSION_TOKEN); // Fetch the userId from storage
+            if (!Number.isNotNull(userId) && Number.isNotNull(sessionToken)) {
                 fetchUserIdAndConnectSocket()
             }
             const socket = connectSocket(userId); // Establish socket connection

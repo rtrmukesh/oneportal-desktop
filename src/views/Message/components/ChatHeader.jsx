@@ -9,6 +9,7 @@ const ChatHeader = ({ channelName, userName }) => {
         first_name={userName?.first_name}
         last_name={userName?.last_name}
         media_url={userName?.media}
+        data={userName ? userName : channelName}
         />}
         {channelName && <h2>{channelName}</h2>}
       </div>
