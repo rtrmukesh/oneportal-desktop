@@ -91,6 +91,7 @@ const UserList = (props) => {
 
 
   return (
+    <div className="sideBarList" style={{ flex: 1, padding: "8px" }}>
     <div className="side-list">
       <ul>
         {ArrayList.isArray(mergedList) &&
@@ -102,7 +103,9 @@ const UserList = (props) => {
                 if (user?.type == "message") {
                   await EStore.removeItem(C_ID)
                   await EStore.setItem(S_ID, user?.id)
-                  handleReadAt && handleReadAt(user?.id)
+                  if(user?.read_at && user?.read_at > 0){
+                    handleReadAt && handleReadAt(user?.id)
+                  }
                   setSelectedChannel && setSelectedChannel(null)
                   setChannalMessageList && setChannalMessageList([])
                   setSelectedUser && setSelectedUser(user);
@@ -110,7 +113,9 @@ const UserList = (props) => {
                 } else {
                   await EStore.removeItem(S_ID)
                   await EStore.setItem(C_ID, user?.channel_id)
-                  handleChannelReadAt && handleChannelReadAt(user)
+                  if(user?.read_at && user?.read_at > 0){
+                    handleChannelReadAt && handleChannelReadAt(user)
+                  }
                   setDirMessages && setDirMessages([])
                   setSelectedUser && setSelectedUser(null)
                   setSelectedChannel && setSelectedChannel(user)
@@ -130,6 +135,7 @@ const UserList = (props) => {
             </li>
           ))}
       </ul>
+    </div>
     </div>
   );
 };

@@ -17,14 +17,15 @@ export const AppProvider = ({ children }) => {
   const [dirMessages, setDirMessages] = useState([]);
   const [channalMessageList, setChannalMessageList] = useState([])
   const [channelList, setChannelList] = useState([])
-  const [messageUserList, setMessageUserList] = useState([])
+  const [messageUserList, setMessageUserList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
 
 
 
   const getDirectMessage = async (inReceiverId=null) => {
+    setIsLoading(true)
     let selectedId = await EStore.getItem(S_ID)
     try {
-      // setIsLoading(true);
       const response = await MessagesService.getMessages(inReceiverId ? inReceiverId :selectedUser?.id  ? selectedUser?.id : selectedId);
       const { receiverMessages = [], senderMessages = [] } = response?.data || {};
   
@@ -44,12 +45,15 @@ export const AppProvider = ({ children }) => {
       ].sort((a, b) => a.timestamp - b.timestamp);
   
       setDirMessages(allMessages);
+      setIsLoading(false)
     } catch (err) {
+      setIsLoading(false)
       console.error("Failed to fetch messages", err);
     }
   };
 
   let getChannalMessage = async (channel=null) => {
+    setIsLoading(true)
     let selectedId = await EStore.getItem(C_ID)
 
     let response = await ChannelMessagesService.search({
@@ -57,14 +61,18 @@ export const AppProvider = ({ children }) => {
     });
     let data = response && response?.data;
     setChannalMessageList(data)
+    setIsLoading(false)
   }
 
   const getChannelList = async () => {
+    setIsLoading(true)
     try {
       const response = await MessageChannelService.search();
       const data = response?.data?.data;
       setChannelList(data);
+      setIsLoading(false)
     } catch (err) {
+      setIsLoading(false)
       console.error("Channel list error:", err);
     }
   };
@@ -72,10 +80,13 @@ export const AppProvider = ({ children }) => {
 
   const getMessageList = async () => {
     try {
+      setIsLoading(true)
       const response = await MessagesService.search();
       const data = response?.data?.data;
       setMessageUserList(data);
+      setIsLoading(false)
     } catch (err) {
+      setIsLoading(false)
       console.error("Message list error:", err);
     }
   };
@@ -86,6 +97,22 @@ export const AppProvider = ({ children }) => {
 
   useNotificationSocket(paramValue)
 
+
+  const onRefresh=(isSideBarRefresh=false)=>{
+
+    if(!isSideBarRefresh && selectedUser){
+      getDirectMessage()
+    }
+
+    if(!isSideBarRefresh && selectedChannel){
+      getChannalMessage()
+    }
+
+    if(isSideBarRefresh){
+      getChannelList()
+      getMessageList()
+    }
+  }
 
 
   return (
@@ -101,7 +128,8 @@ export const AppProvider = ({ children }) => {
         setDirMessages,
         channalMessageList,
         getChannelList,channelList,
-        getMessageList,messageUserList
+        getMessageList,messageUserList,
+        onRefresh, isLoading
       }}
     >
       {children}
