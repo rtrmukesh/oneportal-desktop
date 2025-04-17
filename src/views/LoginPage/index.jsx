@@ -4,8 +4,9 @@ import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import LoginService from '../../services/LoginService';
 import EStore from '../../lib/EStore';
-import { SESSION_TOKEN, TIME_ZONE, USER_ID } from '../../Helper/EStore';
+import { ROLE_PERMISSION, SESSION_TOKEN, TIME_ZONE, USER_ID } from '../../Helper/EStore';
 import { connectSocket } from '../../services/ScoketService';
+import UserRolePermissionService from '../../services/UserRolePermissionService';
 
 function LoginPage() {
     
@@ -46,6 +47,13 @@ function LoginPage() {
               await EStore.setItem(TIME_ZONE, time_zone);
               await EStore.setItem(USER_ID, id);
               connectSocket(id)
+
+              let permissionList = await UserRolePermissionService.getPermission()
+              var values = permissionList.data.data.map((obj) => obj.role_permission);
+    
+              // Convert the array to a comma-separated string
+              var valuesString = values.join(",");
+              await EStore.setItem(ROLE_PERMISSION, valuesString);
               navigate('/message')
 
         }

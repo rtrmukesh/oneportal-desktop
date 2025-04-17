@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FiSettings } from 'react-icons/fi';
 import EStore from '../../../lib/EStore';
 import { useNavigate } from 'react-router-dom';
+import { version } from '../../../../package.json';
 
 const SidebarFooter = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -39,73 +38,51 @@ const SidebarFooter = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 5
+        padding: 5,
       }}
     >
-      <div style={{ position: 'relative' }} ref={menuRef}>
+      <div className="dropdown" ref={menuRef} style={{ position: 'relative' }}>
         <button
+          className="btn btn-link dropdown-toggle"
+          type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           style={{
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
             fontSize: '22px',
-            color: '#555',
-            padding: 0,
-            margin: 0,
+            color: '#fff',
+            textDecoration: 'none',
           }}
+          data-bs-toggle="dropdown"
+          aria-expanded={isMenuOpen}
         >
-          <FiSettings color="white" size={30} />
+          <FiSettings size={30} />
         </button>
-
         {isMenuOpen && (
-          <div style={{
-            position: 'absolute',
-            bottom: '40px', // Positioning dropdown above the button
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '180px',
-            backgroundColor: '#fff',
-            borderRadius: '8px',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-            zIndex: 100,
-            paddingBottom: '10px', // space for the arrow
-          }}>
-            {/* Downward Arrow at bottom */}
-            <div style={{
+          <div
+            className="dropdown-menu show"
+            style={{
               position: 'absolute',
-              bottom: '-10px',
+              bottom: '40px',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: 0,
-              height: 0,
-              borderLeft: '10px solid transparent',
-              borderRight: '10px solid transparent',
-              borderTop: '10px solid white',
-            }} />
-
+              borderRadius: '8px',
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
+              zIndex: 100,
+            }}
+          >
             <button
-              style={{
-                width: '100%',
-                padding: '10px',
-                textAlign: 'left',
-                border: 'none',
-                background: 'none',
-                cursor: 'pointer',
-              }}
-               className="dropdown-button"
+              className="dropdown-item"
               onClick={async () => {
                 setIsMenuOpen(false);
-                await EStore.clear()
-                navigate("/")
+                await EStore.clear();
+                navigate('/');
               }}
             >
               Logout
             </button>
+            <div className="dropdown-divider"></div>
+            <span className="dropdown-item-text text-muted">Version {version}</span>
           </div>
         )}
-
-
       </div>
     </div>
   );

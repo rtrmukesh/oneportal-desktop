@@ -62,5 +62,15 @@ class MessagesService {
       }
       }
 
+      static delete = (messageId, callback) => {
+        apiClient
+          .delete(`${endpoints().messageAPI}/delete/${messageId}`)
+          .then((res) => {
+            return callback && callback(null, res)
+          }).catch((error)=>{
+              return callback && callback(error, null)
+          })
+    }
+
 }
 export default MessagesService
